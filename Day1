@@ -1,0 +1,290 @@
+
+1️⃣ What is Terraform and how does it help manage Infrastructure as Code (IaC)?
+
+**Terraform** is an **Infrastructure as Code (IaC) tool** developed by **HashiCorp**.
+
+👉 It allows you to **define, create, update, and delete infrastructure using code** instead of doing things manually from cloud consoles.
+
+### What does “Infrastructure as Code” mean?
+
+Infrastructure (servers, networks, databases, load balancers, etc.) is:
+
+* Written in **code files**
+* Version-controlled (Git)
+* Reusable & repeatable
+* Automatically created
+
+### Example (simple idea):
+
+Instead of manually creating an EC2 instance in AWS console:
+
+* Click → Launch instance → Select AMI → Configure → Review → Launch ❌
+
+You write this in code:
+
+```hcl
+resource "aws_instance" "my_server" {
+  ami           = "ami-0abcdef"
+  instance_type = "t2.micro"
+}
+```
+
+👉 Terraform reads this code and **creates the server for you**.
+
+✅ This is how Terraform helps manage infrastructure **as code**, not clicks.
+
+---
+
+## 2️⃣ Why do we need Terraform and how does it simplify infrastructure provisioning?
+
+### ❌ Problems with Manual Infrastructure
+
+* Error-prone
+* Time-consuming
+* No record of what was created
+* Hard to recreate the same setup
+* Difficult for teams to collaborate
+
+### ✅ Why Terraform is needed
+
+Terraform solves all these issues.
+
+### How Terraform simplifies provisioning:
+
+#### 🔹 1. Automation
+
+* One command → entire infrastructure is created
+
+```bash
+terraform apply
+```
+
+#### 🔹 2. Consistency
+
+* Same code = same infrastructure every time
+* No “it works on my account” problem
+
+#### 🔹 3. Multi-Cloud Support
+
+Terraform works with:
+
+* **Amazon Web Services**
+* **Microsoft Azure**
+* **Google Cloud Platform**
+
+Same syntax, different providers.
+
+#### 🔹 4. Version Control
+
+* Store Terraform code in Git
+* Track who changed what and when
+
+#### 🔹 5. Easy Scaling & Changes
+
+Want to increase servers from 1 to 3?
+
+```hcl
+count = 3
+```
+
+Terraform figures out what to add/remove automatically.
+
+---
+
+## 3️⃣ How can you install Terraform and set up the environment for AWS, Azure, or GCP?
+
+### 🔹 Step 1: Install Terraform
+
+#### On Linux
+
+```bash
+sudo apt update
+sudo apt install terraform
+```
+
+#### Verify installation
+
+```bash
+terraform --version
+```
+
+---
+
+### 🔹 Step 2: Set up Cloud Environment
+
+Terraform uses **providers** to talk to cloud platforms.
+
+---
+
+### ✅ AWS Setup
+
+1. Install AWS CLI
+2. Configure credentials:
+
+```bash
+aws configure
+```
+
+Enter:
+
+* Access Key
+* Secret Key
+* Region
+
+3. Provider configuration:
+
+```hcl
+provider "aws" {
+  region = "ap-south-1"
+}
+```
+
+---
+
+### ✅ Azure Setup
+
+1. Login:
+
+```bash
+az login
+```
+
+2. Provider configuration:
+
+```hcl
+provider "azurerm" {
+  features {}
+}
+```
+
+---
+
+### ✅ GCP Setup
+
+1. Create service account key (JSON)
+2. Set environment variable:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="key.json"
+```
+
+3. Provider configuration:
+
+```hcl
+provider "google" {
+  project = "my-project"
+  region  = "us-central1"
+}
+```
+
+---
+
+## 4️⃣ Important Terraform Terminologies (5 Crucial Ones with Examples)
+
+### 🔹 1. Provider
+
+**Provider** tells Terraform **which cloud or service to use**.
+
+📌 Example:
+
+```hcl
+provider "aws" {
+  region = "ap-south-1"
+}
+```
+
+👉 Here, Terraform knows it has to talk to AWS.
+
+---
+
+### 🔹 2. Resource
+
+A **resource** is **any infrastructure component** you want to create.
+
+📌 Example:
+
+```hcl
+resource "aws_instance" "web" {
+  ami           = "ami-0abcdef"
+  instance_type = "t2.micro"
+}
+```
+
+👉 This creates an EC2 instance.
+
+---
+
+### 🔹 3. Variable
+
+Variables make code **dynamic and reusable**.
+
+📌 Example:
+
+```hcl
+variable "instance_type" {
+  default = "t2.micro"
+}
+```
+
+Usage:
+
+```hcl
+instance_type = var.instance_type
+```
+
+👉 Change value once → affects everywhere.
+
+---
+
+### 🔹 4. State File (terraform.tfstate)
+
+Terraform stores the **current state of infrastructure** in a state file.
+
+👉 It keeps track of:
+
+* What exists
+* What Terraform created
+* What needs to be changed
+
+📌 Example:
+
+```bash
+terraform.tfstate
+```
+
+⚠️ Very important file — don’t delete it.
+
+---
+
+### 🔹 5. Plan & Apply
+
+#### `terraform plan`
+
+* Shows **what Terraform will do**
+* No changes made
+
+```bash
+terraform plan
+```
+
+#### `terraform apply`
+
+* Actually **creates/updates infrastructure**
+
+```bash
+terraform apply
+```
+
+👉 Think of it as:
+
+* **Plan = Preview**
+* **Apply = Execute**
+
+---
+
+Summary:
+* **Terraform**: IaC tool to manage infrastructure using code
+* **Why**: Automation, consistency, multi-cloud, version control
+* **Install**: Install binary → configure provider credentials
+* **Core terms**: Provider, Resource, Variable, State, Plan/Apply
+

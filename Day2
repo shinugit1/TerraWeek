@@ -1,0 +1,232 @@
+✅ Task 1: Familiarize yourself with HCL syntax used in Terraform
+
+🔹 What is HCL?
+
+HCL (HashiCorp Configuration Language) is the language Terraform uses to write infrastructure code.
+
+It is:
+* Human-readable
+* Declarative (you say *what you want*, not *how to do it*)
+* Easy to version control
+
+🔹 HCL Structure (Very Important)
+
+General format of HCL
+
+block_type "label1" "label2" {
+  argument = value
+}
+
+Example:
+
+resource "local_file" "example" {
+  filename = "test.txt"
+  content  = "Hello Terraform"
+}
+
+
+🔹 HCL Building Blocks
+
+1️⃣ Blocks
+
+Blocks define **what you are configuring**.
+Common block types:
+
+* `terraform`
+* `provider`
+* `resource`
+* `variable`
+* `output`
+* `data`
+
+Example:
+
+resource "local_file" "myfile" {
+  filename = "hello.txt"
+}
+
+2️⃣ Arguments
+
+Arguments are **key–value pairs inside a block**.
+Example:
+filename = "hello.txt"
+content  = "Hello World"
+
+Here:
+* `filename` → argument name
+* `"hello.txt"` → argument value
+
+3️⃣ Parameters
+👉 In Terraform language, *arguments and parameters are often used interchangeably*.
+Practically, **parameter = argument**.
+
+🔹 Resources in Terraform
+
+A **resource** represents something Terraform manages.
+
+Types of resources:
+* Compute (EC2, VM)
+* Storage (S3, disks)
+* Networking (VPC, subnets)
+* Local resources (files, folders)
+
+Example:
+
+resource "local_file" "notes" {
+  filename = "notes.txt"
+  content  = "Learning Terraform"
+}
+
+🔹 Data Sources in Terraform
+
+**Data sources** are used to **read existing information** instead of creating new resources.
+
+Example:
+data "aws_ami" "latest_amazon_linux" {
+  most_recent = true
+}
+
+Difference:
+* **resource** → creates something
+* **data** → reads something that already exists
+
+✅ Task 2: Understand variables, data types, and expressions in HCL
+
+🔹 Variables in Terraform
+
+Variables make your code:
+* Reusable
+* Flexible
+* Cleaner
+
+🔹 Step 1: Create `variables.tf`
+Create a file called **variables.tf**
+
+variable "file_name" {
+  description = "Name of the file to create"
+  type        = string
+  default     = "myfile.txt"
+}
+
+variable "file_content" {
+  description = "Content of the file"
+  type        = string
+  default     = "Hello from Terraform variables"
+}
+
+Data Types in Terraform
+
+Common types:
+* `string`
+* `number`
+* `bool`
+* `list`
+* `map`
+
+Example:
+
+type = string
+
+🔹 Step 2: Use variables in `main.tf`
+
+Create **main.tf**
+
+resource "local_file" "example" {
+  filename = var.file_name
+  content  = var.file_content
+}
+
+`var.file_name` is an **expression**
+Terraform evaluates it at runtime.
+
+🔹 What is an Expression?
+Anything Terraform evaluates to get a value.
+
+Examples:
+var.file_name
+"${var.file_name}-backup"
+length(["a","b","c"])
+
+✅ Task 3: Practice writing Terraform configurations using HCL
+
+Now we’ll do a **complete working configuration**.
+
+🔹 Step 1: Add `required_providers`
+Terraform needs to know **which providers to download**.
+
+Add this to **main.tf** (top of file):
+
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
+  }
+}
+
+This tells Terraform:
+
+* Use **local provider**
+* Download from HashiCorp registry
+
+🔹 Step 2: Full Project Structure
+
+Your folder should look like this:
+
+terraform-hcl-practice/
+│
+├── main.tf
+├── variables.tf
+
+🔹 Step 3: Run Terraform CLI Commands
+
+Initialize Terraform
+
+terraform init
+```
+
+✔ Downloads provider
+✔ Prepares working directory
+
+Preview Changes
+
+```bash
+terraform plan
+```
+
+✔ Shows:
+* What file will be created
+* What content will be added
+
+Apply Configuration
+```
+terraform apply
+```
+Type **yes** when asked.
+
+✔ File gets created in your folder:
+```
+myfile.txt
+```
+### Verify Output
+
+```bash
+cat myfile.txt
+```
+
+You’ll see:
+```
+Hello from Terraform variables
+🔹 Optional: Clean Up
+```bash
+terraform destroy
+```
+✔ Removes created resources.
+Key Concepts You Just Learned (Interview Gold)
+* HCL is **block-based & declarative**
+* Resources create infrastructure
+* Data sources read existing data
+* Variables make Terraform reusable
+* `terraform init → plan → apply` is the core workflow
+* Providers are mandatory for Terraform to work
